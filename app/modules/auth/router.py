@@ -56,11 +56,7 @@ def logout(
     db: Session = Depends(get_db),
 ):
     sesion = sessions_module.buscar_sesion_activa(db, token)
-    if not sesion:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Sesión no encontrada",
-        )
+    if sesion:
+        sessions_module.cerrar_sesion(db, sesion)
 
-    sessions_module.cerrar_sesion(db, sesion)
     return {"message": "Sesión cerrada correctamente"}
